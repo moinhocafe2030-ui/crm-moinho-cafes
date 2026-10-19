@@ -120,6 +120,31 @@ e no cabeçalho do app. Se nenhuma logo foi enviada ainda, esses espaços ficam 
 Configuração necessária (uma vez só): rode `supabase/migrations/0005_storage_branding.sql` no SQL
 Editor, que cria o bucket público `branding` com as permissões certas.
 
+> O ícone do app instalado no celular usa essa mesma logo, mas fica "travado" no momento da
+> instalação (limitação do sistema operacional) — se trocar a logo depois, o ícone já instalado nos
+> celulares não muda sozinho. Me avise se quiser atualizar o ícone também depois de trocar a logo.
+
+## Instalar como aplicativo no celular
+
+O CRM é um **PWA** — funciona como um app de verdade no celular, com ícone na tela inicial, sem
+precisar passar pela loja de aplicativos (Google Play / App Store).
+
+**No Android (Chrome):**
+1. Abra `https://crm-moinho-cafes.vercel.app` no Chrome
+2. Toque no menu (⋮) no canto superior direito
+3. Toque em **"Instalar app"** (ou "Adicionar à tela inicial")
+4. Confirme
+
+**No iPhone (Safari):**
+1. Abra `https://crm-moinho-cafes.vercel.app` no Safari (precisa ser o Safari, não funciona em
+   outros navegadores no iPhone)
+2. Toque no ícone de compartilhar (quadrado com uma seta pra cima)
+3. Toque em **"Adicionar à Tela de Início"**
+4. Confirme
+
+Depois disso, o CRM aparece como um ícone normal na tela do celular, abre em tela cheia (sem a barra
+de endereço do navegador) e funciona exatamente como qualquer outro app.
+
 ### Limitação do modo Teste
 Como o app não foi publicado em produção no Google Cloud (isso exigiria uma página inicial e uma
 política de privacidade reais hospedadas — podemos fazer isso depois que o site estiver na Vercel),
@@ -130,12 +155,40 @@ automaticamente). É rápido: só repetir os passos acima.
 No Google Cloud Console → **Google Auth Platform** → **Público-alvo** → seção "Usuários de teste" →
 adicionar o email do Google de cada vendedor (até 100 permitidos no modo Teste).
 
-## Dados de acesso (vendedores)
+## Como criar o acesso de um novo vendedor (passo a passo)
 
-Para cada vendedor, crie um usuário em **Supabase > Authentication > Users > Add user** com email e senha
-temporária (marque "Auto Confirm User"). Um perfil em `vendedores` é criado automaticamente. Depois disso,
-o vendedor acessa o CRM publicado com esse email/senha — pode trocar a senha a qualquer momento pela
-tela de login, em **"Esqueci minha senha"** (manda um link por email, sem precisar de você).
+Guarde este guia — é tudo que você precisa, sem depender de ajuda técnica.
+
+### Parte 1 — Criar o login no CRM
+1. Acesse **supabase.com** e entre no projeto do CRM
+2. No menu lateral, clique em **Authentication** → aba **Users**
+3. Clique em **Add user** → **Create new user**
+4. Preencha:
+   - **Email**: o email do vendedor
+   - **Password**: uma senha temporária qualquer (ele pode trocar depois)
+5. Marque a caixinha **Auto Confirm User** (importante — sem isso ele não consegue entrar)
+6. Clique em **Create user**
+7. Pronto — o perfil dele na tabela `vendedores` é criado automaticamente
+
+Agora é só passar pro vendedor:
+- O endereço do CRM: `https://crm-moinho-cafes.vercel.app`
+- O email e a senha temporária (ele pode trocar em **"Esqueci minha senha"** na tela de login, a
+  qualquer momento, sem precisar de você)
+
+### Parte 2 — Liberar Google Agenda e Email para esse vendedor (opcional)
+Só é necessária se esse vendedor for usar a integração com Google Agenda/Gmail (criar eventos e
+enviar emails direto do CRM). Sem isso, o resto do CRM funciona normalmente.
+
+1. Acesse **console.cloud.google.com**, com o projeto `CRM - Moinho Cafe Global` selecionado
+2. Menu ☰ → **Google Auth Platform** → **Público-alvo**
+3. Role até a seção **"Usuários de teste"**
+4. Clique em **Add users**, digite o email do Google do vendedor, e salve
+5. Avise o vendedor: na primeira vez que ele clicar em "Conectar Google" (dentro de **Configurações**
+   no CRM), vai aparecer um aviso "app não verificado" — é normal, ele deve clicar em **"Avançado"**
+   e depois **"Acessar [nome do app] (não seguro)"**
+
+**Atenção**: como o app está em modo "Teste" no Google (ver seção "Limitação do modo Teste" mais
+abaixo), cada vendedor conectado precisa clicar em "Reconectar" a cada 7 dias.
 
 ## Publicação (deploy)
 

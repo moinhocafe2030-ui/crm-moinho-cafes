@@ -18,18 +18,22 @@ export default defineConfig({
         background_color: '#faf6f1',
         display: 'standalone',
         start_url: '/',
+        // Usa a logo publicada no Supabase Storage (mesma do login/cabeçalho) como ícone
+        // do app no celular. Se o dono trocar a logo em Configurações, é preciso publicar
+        // uma nova versão do app para o ícone instalado acompanhar (limitação do sistema
+        // operacional, que guarda o ícone no momento da instalação).
         icons: [
           {
-            src: 'icon-192.svg',
+            src: 'https://narrzqrfuaqdivdybulc.supabase.co/storage/v1/object/public/branding/logo',
             sizes: '192x192',
-            type: 'image/svg+xml',
+            type: 'image/webp',
             purpose: 'any',
           },
           {
-            src: 'icon-512.svg',
+            src: 'https://narrzqrfuaqdivdybulc.supabase.co/storage/v1/object/public/branding/logo',
             sizes: '512x512',
-            type: 'image/svg+xml',
-            purpose: 'any maskable',
+            type: 'image/webp',
+            purpose: 'any',
           },
         ],
       },

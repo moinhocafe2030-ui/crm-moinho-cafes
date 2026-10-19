@@ -7,7 +7,7 @@ const CABECALHO = [
   'Nome do contato',
   'Nome do estabelecimento',
   'Tipo',
-  'Interesses',
+  'Portfólio',
   'Telefone',
   'Email',
   'Instagram',
@@ -72,7 +72,7 @@ export async function importarClientesCSV(
   const iNomeContato = idx('Nome do contato')
   const iNomeEstab = idx('Nome do estabelecimento')
   const iTipo = idx('Tipo')
-  const iInteresses = idx('Interesses')
+  const iInteresses = idx('Portfólio')
   const iTelefone = idx('Telefone')
   const iEmail = idx('Email')
   const iInstagram = idx('Instagram')

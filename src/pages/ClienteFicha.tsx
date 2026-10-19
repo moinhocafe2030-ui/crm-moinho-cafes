@@ -363,7 +363,7 @@ export function ClienteFicha() {
           <Campo rotulo="Origem" valor={rotulo(ORIGENS, cliente.origem)} />
           <Campo rotulo="Responsável" valor={cliente.vendedores?.nome ?? '—'} />
           <Campo
-            rotulo="Interesses"
+            rotulo="Portfólio"
             valor={
               cliente.tipos_interesse.length
                 ? cliente.tipos_interesse.map((t) => rotulo(TIPOS_INTERESSE, t)).join(', ')

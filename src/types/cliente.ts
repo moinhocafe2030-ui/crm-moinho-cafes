@@ -23,6 +23,8 @@ export type TipoEstabelecimento =
   | 'emporio'
   | 'escritorio'
   | 'revendedor'
+  | 'cafeicultor_cooperativa'
+  | 'pessoa_fisica'
   | 'outro'
 
 export const TIPOS_ESTABELECIMENTO: { value: TipoEstabelecimento; label: string }[] = [
@@ -32,10 +34,19 @@ export const TIPOS_ESTABELECIMENTO: { value: TipoEstabelecimento; label: string 
   { value: 'emporio', label: 'Empório' },
   { value: 'escritorio', label: 'Escritório' },
   { value: 'revendedor', label: 'Revendedor' },
+  { value: 'cafeicultor_cooperativa', label: 'Cafecultor/Cooperativa' },
+  { value: 'pessoa_fisica', label: 'Pessoa física' },
   { value: 'outro', label: 'Outro' },
 ]
 
-export type TipoInteresse = 'catering' | 'avaliacao_sensorial' | 'torra' | 'cursos' | 'produtos_fisicos'
+export type TipoInteresse =
+  | 'catering'
+  | 'avaliacao_sensorial'
+  | 'torra'
+  | 'cursos'
+  | 'produtos_fisicos'
+  | 'white_label'
+  | 'parceiro_comercial'
 
 export const TIPOS_INTERESSE: { value: TipoInteresse; label: string }[] = [
   { value: 'catering', label: 'Catering' },
@@ -43,6 +54,8 @@ export const TIPOS_INTERESSE: { value: TipoInteresse; label: string }[] = [
   { value: 'torra', label: 'Torra' },
   { value: 'cursos', label: 'Cursos' },
   { value: 'produtos_fisicos', label: 'Produtos físicos' },
+  { value: 'white_label', label: 'White Label' },
+  { value: 'parceiro_comercial', label: 'Parceiro Comercial' },
 ]
 
 const TIPOS_INTERESSE_SERVICO: TipoInteresse[] = ['catering', 'avaliacao_sensorial', 'torra', 'cursos']
@@ -55,7 +68,7 @@ export function precisaDadosProduto(tipos: TipoInteresse[]) {
   return tipos.includes('produtos_fisicos')
 }
 
-export type Origem = 'indicacao' | 'instagram' | 'visita' | 'feira' | 'site' | 'outro'
+export type Origem = 'indicacao' | 'instagram' | 'visita' | 'feira' | 'site' | 'bni' | 'ia' | 'outro'
 
 export const ORIGENS: { value: Origem; label: string }[] = [
   { value: 'indicacao', label: 'Indicação' },
@@ -63,6 +76,8 @@ export const ORIGENS: { value: Origem; label: string }[] = [
   { value: 'visita', label: 'Visita' },
   { value: 'feira', label: 'Feira' },
   { value: 'site', label: 'Site' },
+  { value: 'bni', label: 'BNI' },
+  { value: 'ia', label: 'IA' },
   { value: 'outro', label: 'Outro' },
 ]
 

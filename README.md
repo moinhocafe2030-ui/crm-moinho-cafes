@@ -83,10 +83,10 @@ Na tela **Clientes**, use **Exportar CSV** para baixar um modelo com as colunas 
 lista abaixo). Para importar, prepare um CSV com estas colunas (os nomes das colunas precisam bater
 exatamente; colunas que você não tiver podem ficar em branco ou ser omitidas):
 
-`Nome do contato, Nome do estabelecimento, Tipo, Interesses, Telefone, Email, Instagram, Cidade, Bairro, Endereço, Origem, Etapa, Responsável, Observações`
+`Nome do contato, Nome do estabelecimento, Tipo, Portfólio, Telefone, Email, Instagram, Cidade, Bairro, Endereço, Origem, Etapa, Responsável, Observações`
 
 - **Nome do contato** e **Nome do estabelecimento** são obrigatórios.
-- **Interesses**: vários valores separados por `;` (ex: `Catering; Torra`).
+- **Portfólio**: vários valores separados por `;` (ex: `Catering; Torra`).
 - **Tipo**, **Origem** e **Etapa**: use os mesmos nomes que aparecem no sistema (ex: "Cafeteria",
   "Instagram", "Negociação"). Se não reconhecer, usa "Outro" ou a primeira etapa do funil.
 - **Responsável**: nome exato de um vendedor já cadastrado (opcional).

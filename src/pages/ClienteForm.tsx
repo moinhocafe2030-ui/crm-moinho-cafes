@@ -264,7 +264,7 @@ export function ClienteForm() {
           </div>
 
           <div className="mt-3">
-            <label className={labelClasse}>Tipos de interesse</label>
+            <label className={labelClasse}>Portfólio</label>
             <div className="flex flex-wrap gap-3">
               {TIPOS_INTERESSE.map((t) => (
                 <label key={t.value} className="flex items-center gap-1.5 text-sm text-gray-700">

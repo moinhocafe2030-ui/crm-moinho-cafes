@@ -2,14 +2,15 @@
 
 CRM interno para controlar potenciais clientes (cafeterias, restaurantes, empórios, escritórios, revendedores).
 
-> Este README é atualizado a cada etapa do projeto. Hoje ele cobre apenas o que já existe: o projeto
-> base e a tela de login. As seções de Vercel, Google e WhatsApp serão preenchidas quando chegarmos nessas etapas.
+> Este README é atualizado a cada etapa do projeto.
+
+**CRM publicado em: https://crm-moinho-cafes.vercel.app**
 
 ## Status atual
 
 - [x] Projeto base (Vite + React + TypeScript + Tailwind + PWA)
 - [x] Schema SQL inicial com todas as tabelas e Row Level Security (`supabase/migrations/0001_init.sql`)
-- [x] Tela de login (Supabase Auth)
+- [x] Tela de login (Supabase Auth) + "Esqueci minha senha" / redefinir senha
 - [x] Cadastro, lista com busca/filtros e ficha de clientes
 - [x] Funil Kanban com arrastar e soltar, motivo da perda e edição de etapas
 - [x] Histórico de interações, próximo passo e tela "Hoje"
@@ -18,7 +19,8 @@ CRM interno para controlar potenciais clientes (cafeterias, restaurantes, empór
 - [x] Integração Google Agenda
 - [x] Envio de email com modelos editáveis
 - [x] Lembrete diário por email (09:00, Edge Function + pg_cron)
-- [ ] Publicação na Vercel
+- [x] Logo da empresa editável
+- [x] Publicação na Vercel (deploy automático a cada atualização enviada ao GitHub)
 
 ## Como rodar localmente
 
@@ -130,8 +132,27 @@ adicionar o email do Google de cada vendedor (até 100 permitidos no modo Teste)
 
 ## Dados de acesso (vendedores)
 
-Para cada vendedor, crie um usuário em **Supabase > Authentication > Users > Add user** com email e senha.
-Um perfil em `vendedores` é criado automaticamente.
+Para cada vendedor, crie um usuário em **Supabase > Authentication > Users > Add user** com email e senha
+temporária (marque "Auto Confirm User"). Um perfil em `vendedores` é criado automaticamente. Depois disso,
+o vendedor acessa o CRM publicado com esse email/senha — pode trocar a senha a qualquer momento pela
+tela de login, em **"Esqueci minha senha"** (manda um link por email, sem precisar de você).
+
+## Publicação (deploy)
+
+O CRM está publicado na **Vercel**, conectada ao repositório no **GitHub**
+(`moinhocafe2030-ui/crm-moinho-cafes`). Toda vez que uma atualização é enviada (`git push`) para a
+branch `main`, a Vercel publica a nova versão automaticamente — não precisa fazer nada manual.
+
+- URL de produção: `https://crm-moinho-cafes.vercel.app`
+- Variáveis de ambiente configuradas na Vercel (**Project Settings > Environment Variables**):
+  `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_GOOGLE_CLIENT_ID`
+- No Supabase, o secret `APP_URL` das Edge Functions aponta para essa URL de produção
+- No Supabase, em **Authentication > URL Configuration**, a "Site URL" e as "Redirect URLs" incluem
+  tanto a URL de produção quanto `http://localhost:5173` (para testes locais)
+
+### Domínio próprio (opcional, para depois)
+Se quiser usar algo como `crm.moinhocafes.com.br` em vez do endereço `.vercel.app`, dá pra configurar
+depois em **Vercel > Project Settings > Domains** — me avise quando quiser fazer isso.
 
 ## Backup
 

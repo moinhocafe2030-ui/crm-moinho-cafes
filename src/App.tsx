@@ -3,6 +3,8 @@ import { AuthProvider } from './lib/AuthContext'
 import { RotaProtegida } from './components/RotaProtegida'
 import { Layout } from './components/Layout'
 import { Login } from './pages/Login'
+import { EsqueciSenha } from './pages/EsqueciSenha'
+import { RedefinirSenha } from './pages/RedefinirSenha'
 import { Hoje } from './pages/Hoje'
 import { Clientes } from './pages/Clientes'
 import { ClienteForm } from './pages/ClienteForm'
@@ -19,6 +21,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+          <Route path="/redefinir-senha" element={<RedefinirSenha />} />
           <Route
             path="/"
             element={

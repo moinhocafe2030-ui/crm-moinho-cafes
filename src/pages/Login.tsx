@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import { Logo } from '../components/Logo'
@@ -75,6 +75,10 @@ export function Login() {
           >
             {enviando ? 'Entrando...' : 'Entrar'}
           </button>
+
+          <Link to="/esqueci-senha" className="text-center text-sm text-gray-500 hover:text-marrom">
+            Esqueci minha senha
+          </Link>
         </form>
       </div>
     </div>

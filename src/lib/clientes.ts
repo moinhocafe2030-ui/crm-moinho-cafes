@@ -8,6 +8,7 @@ import type {
   Tag,
   Amostra,
 } from '../types/cliente'
+import { criarProximoPasso } from './proximosPassos'
 
 const SELECT_COMPLETO = `
   *,
@@ -184,9 +185,17 @@ export async function criarAmostra(
   clienteId: string,
   dataEnvio: string | null,
   feedback: string | null,
+  criarFollowUp: boolean = false,
 ): Promise<void> {
   const { error } = await supabase
     .from('amostras')
     .insert({ cliente_id: clienteId, data_envio: dataEnvio, feedback })
   if (error) throw error
+
+  if (criarFollowUp) {
+    const base = dataEnvio ? new Date(`${dataEnvio}T00:00:00`) : new Date()
+    base.setDate(base.getDate() + 7)
+    const dataRetorno = base.toLocaleDateString('sv-SE')
+    await criarProximoPasso(clienteId, 'Cobrar feedback da amostra enviada', dataRetorno, null)
+  }
 }

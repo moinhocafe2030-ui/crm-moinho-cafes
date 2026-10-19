@@ -154,6 +154,22 @@ export function EtapasFunil() {
                 />
                 Pede motivo da perda
               </label>
+              <label className="flex items-center gap-1.5">
+                Chance de fechar
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  className="w-16 rounded-lg border border-gray-300 px-2 py-1 text-sm"
+                  value={etapa.probabilidade}
+                  onChange={(e) =>
+                    salvarCampo(etapa.id, {
+                      probabilidade: Math.min(100, Math.max(0, Number(e.target.value) || 0)),
+                    })
+                  }
+                />
+                %
+              </label>
             </div>
           </div>
         ))}

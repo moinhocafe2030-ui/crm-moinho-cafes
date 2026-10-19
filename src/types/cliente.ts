@@ -82,6 +82,7 @@ export interface EtapaFunil {
   cor: string
   encerra_ganho: boolean
   encerra_perda: boolean
+  probabilidade: number
 }
 
 export interface Vendedor {
@@ -114,6 +115,36 @@ export interface Amostra {
   cliente_id: string
   data_envio: string | null
   feedback: string | null
+  criado_em: string
+}
+
+export interface Pedido {
+  id: string
+  cliente_id: string
+  data_pedido: string
+  produto: string | null
+  valor: number | null
+  observacao: string | null
+  criado_em: string
+}
+
+export interface PrecoNegociado {
+  id: string
+  cliente_id: string
+  produto: string
+  preco: number
+  observacao: string | null
+  atualizado_em: string
+}
+
+export interface AnexoCliente {
+  id: string
+  cliente_id: string
+  nome_arquivo: string
+  caminho: string
+  tipo: string | null
+  tamanho: number | null
+  enviado_por: string | null
   criado_em: string
 }
 

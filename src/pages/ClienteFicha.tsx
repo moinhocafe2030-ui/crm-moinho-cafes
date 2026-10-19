@@ -8,6 +8,9 @@ import {
   marcarProximoPassoConcluido,
 } from '../lib/proximosPassos'
 import { listarModelosEmail, enviarEmail, preencherModelo } from '../lib/email'
+import { listarPedidos, criarPedido } from '../lib/pedidos'
+import { listarPrecos, criarPreco, excluirPreco } from '../lib/precos'
+import { listarAnexos, enviarAnexo, obterUrlAnexo, excluirAnexo } from '../lib/anexos'
 import type {
   ClienteCompleto,
   Amostra,
@@ -15,6 +18,9 @@ import type {
   ProximoPasso,
   TipoInteracao,
   ModeloEmail,
+  Pedido,
+  PrecoNegociado,
+  AnexoCliente,
 } from '../types/cliente'
 import {
   TIPOS_ESTABELECIMENTO,
@@ -41,7 +47,24 @@ export function ClienteFicha() {
 
   const [novaAmostraData, setNovaAmostraData] = useState(dataHojeISO())
   const [novaAmostraFeedback, setNovaAmostraFeedback] = useState('')
+  const [novaAmostraFollowUp, setNovaAmostraFollowUp] = useState(true)
   const [salvandoAmostra, setSalvandoAmostra] = useState(false)
+
+  const [pedidos, setPedidos] = useState<Pedido[]>([])
+  const [novoPedidoData, setNovoPedidoData] = useState(dataHojeISO())
+  const [novoPedidoProduto, setNovoPedidoProduto] = useState('')
+  const [novoPedidoValor, setNovoPedidoValor] = useState('')
+  const [novoPedidoObservacao, setNovoPedidoObservacao] = useState('')
+  const [salvandoPedido, setSalvandoPedido] = useState(false)
+
+  const [precos, setPrecos] = useState<PrecoNegociado[]>([])
+  const [novoPrecoProduto, setNovoPrecoProduto] = useState('')
+  const [novoPrecoValor, setNovoPrecoValor] = useState('')
+  const [novoPrecoObservacao, setNovoPrecoObservacao] = useState('')
+  const [salvandoPreco, setSalvandoPreco] = useState(false)
+
+  const [anexos, setAnexos] = useState<AnexoCliente[]>([])
+  const [enviandoAnexo, setEnviandoAnexo] = useState(false)
 
   const [interacoes, setInteracoes] = useState<Interacao[]>([])
   const [novoTipoInteracao, setNovoTipoInteracao] = useState<TipoInteracao>('ligacao')
@@ -65,16 +88,22 @@ export function ClienteFicha() {
     if (!id) return
     setCarregando(true)
     try {
-      const [c, a, i, p] = await Promise.all([
+      const [c, a, i, p, ped, prc, anx] = await Promise.all([
         obterCliente(id),
         listarAmostras(id),
         listarInteracoes(id),
         listarProximosPassos(id),
+        listarPedidos(id),
+        listarPrecos(id),
+        listarAnexos(id),
       ])
       setCliente(c)
       setAmostras(a)
       setInteracoes(i)
       setProximosPassos(p)
+      setPedidos(ped)
+      setPrecos(prc)
+      setAnexos(anx)
     } catch (e) {
       setErro((e as Error).message)
     } finally {
@@ -110,13 +139,92 @@ export function ClienteFicha() {
     if (!id) return
     setSalvandoAmostra(true)
     try {
-      await criarAmostra(id, novaAmostraData || null, novaAmostraFeedback || null)
+      await criarAmostra(id, novaAmostraData || null, novaAmostraFeedback || null, novaAmostraFollowUp)
       setNovaAmostraFeedback('')
       await carregar()
     } catch (e) {
       setErro((e as Error).message)
     } finally {
       setSalvandoAmostra(false)
+    }
+  }
+
+  async function handleAdicionarPedido() {
+    if (!id || !novoPedidoData) return
+    setSalvandoPedido(true)
+    try {
+      await criarPedido(
+        id,
+        novoPedidoData,
+        novoPedidoProduto || null,
+        novoPedidoValor.trim() === '' ? null : Number(novoPedidoValor),
+        novoPedidoObservacao || null,
+      )
+      setNovoPedidoProduto('')
+      setNovoPedidoValor('')
+      setNovoPedidoObservacao('')
+      await carregar()
+    } catch (e) {
+      setErro((e as Error).message)
+    } finally {
+      setSalvandoPedido(false)
+    }
+  }
+
+  async function handleAdicionarPreco() {
+    if (!id || !novoPrecoProduto.trim() || novoPrecoValor.trim() === '') return
+    setSalvandoPreco(true)
+    try {
+      await criarPreco(id, novoPrecoProduto.trim(), Number(novoPrecoValor), novoPrecoObservacao || null)
+      setNovoPrecoProduto('')
+      setNovoPrecoValor('')
+      setNovoPrecoObservacao('')
+      await carregar()
+    } catch (e) {
+      setErro((e as Error).message)
+    } finally {
+      setSalvandoPreco(false)
+    }
+  }
+
+  async function handleExcluirPreco(precoId: string) {
+    try {
+      await excluirPreco(precoId)
+      setPrecos((ps) => ps.filter((p) => p.id !== precoId))
+    } catch (e) {
+      setErro((e as Error).message)
+    }
+  }
+
+  async function handleEnviarAnexo(arquivo: File | undefined) {
+    if (!id || !arquivo) return
+    setEnviandoAnexo(true)
+    try {
+      await enviarAnexo(id, arquivo)
+      await carregar()
+    } catch (e) {
+      setErro((e as Error).message)
+    } finally {
+      setEnviandoAnexo(false)
+    }
+  }
+
+  async function handleAbrirAnexo(anexo: AnexoCliente) {
+    try {
+      const url = await obterUrlAnexo(anexo.caminho)
+      window.open(url, '_blank')
+    } catch (e) {
+      setErro((e as Error).message)
+    }
+  }
+
+  async function handleExcluirAnexo(anexo: AnexoCliente) {
+    if (!confirm('Excluir este anexo?')) return
+    try {
+      await excluirAnexo(anexo)
+      setAnexos((as) => as.filter((a) => a.id !== anexo.id))
+    } catch (e) {
+      setErro((e as Error).message)
     }
   }
 
@@ -381,6 +489,199 @@ export function ClienteFicha() {
             {salvandoAmostra ? 'Salvando...' : 'Registrar amostra'}
           </button>
         </div>
+        <label className="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
+          <input
+            type="checkbox"
+            checked={novaAmostraFollowUp}
+            onChange={(e) => setNovaAmostraFollowUp(e.target.checked)}
+          />
+          Criar lembrete automático para cobrar feedback em 7 dias
+        </label>
+      </section>
+
+      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm">
+        <h2 className="mb-3 font-medium text-gray-900">Histórico de pedidos</h2>
+
+        {pedidos.length === 0 ? (
+          <p className="mb-3 text-sm text-gray-500">Nenhum pedido registrado ainda.</p>
+        ) : (
+          <ul className="mb-3 flex flex-col gap-2">
+            {pedidos.map((p) => (
+              <li key={p.id} className="rounded-lg border border-gray-200 p-3 text-sm">
+                <p className="font-medium text-gray-900">
+                  {formatarDataSimples(p.data_pedido)}
+                  {p.valor != null && ` · R$ ${p.valor}`}
+                  {p.produto && ` · ${p.produto}`}
+                </p>
+                {p.observacao && <p className="text-gray-600">{p.observacao}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <div>
+            <label className={labelClasse}>Data do pedido</label>
+            <input
+              type="date"
+              className={campoClasse}
+              value={novoPedidoData}
+              onChange={(e) => setNovoPedidoData(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelClasse}>Produto</label>
+            <input
+              className={campoClasse}
+              value={novoPedidoProduto}
+              onChange={(e) => setNovoPedidoProduto(e.target.value)}
+              placeholder="Opcional"
+            />
+          </div>
+          <div>
+            <label className={labelClasse}>Valor (R$)</label>
+            <input
+              type="number"
+              step="0.01"
+              className={campoClasse}
+              value={novoPedidoValor}
+              onChange={(e) => setNovoPedidoValor(e.target.value)}
+            />
+          </div>
+          <div className="flex-1">
+            <label className={labelClasse}>Observação</label>
+            <input
+              className={campoClasse}
+              value={novoPedidoObservacao}
+              onChange={(e) => setNovoPedidoObservacao(e.target.value)}
+              placeholder="Opcional"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleAdicionarPedido}
+            disabled={salvandoPedido}
+            className={botaoPrimarioClasse}
+          >
+            {salvandoPedido ? 'Salvando...' : 'Registrar pedido'}
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-gray-400">
+          Registrar os pedidos aqui alimenta o alerta de "Clientes sem comprar" no Painel.
+        </p>
+      </section>
+
+      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm">
+        <h2 className="mb-3 font-medium text-gray-900">Preços negociados</h2>
+
+        {precos.length === 0 ? (
+          <p className="mb-3 text-sm text-gray-500">Nenhum preço negociado registrado.</p>
+        ) : (
+          <ul className="mb-3 flex flex-col gap-2">
+            {precos.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-start justify-between gap-2 rounded-lg border border-gray-200 p-3 text-sm"
+              >
+                <div>
+                  <p className="font-medium text-gray-900">
+                    {p.produto} · R$ {p.preco}
+                  </p>
+                  {p.observacao && <p className="text-gray-600">{p.observacao}</p>}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleExcluirPreco(p.id)}
+                  className="shrink-0 text-xs text-gray-400 hover:text-red-600"
+                >
+                  Excluir
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <div className="flex-1">
+            <label className={labelClasse}>Produto</label>
+            <input
+              className={campoClasse}
+              value={novoPrecoProduto}
+              onChange={(e) => setNovoPrecoProduto(e.target.value)}
+              placeholder="Ex: Café grão 1kg"
+            />
+          </div>
+          <div>
+            <label className={labelClasse}>Preço (R$)</label>
+            <input
+              type="number"
+              step="0.01"
+              className={campoClasse}
+              value={novoPrecoValor}
+              onChange={(e) => setNovoPrecoValor(e.target.value)}
+            />
+          </div>
+          <div className="flex-1">
+            <label className={labelClasse}>Observação</label>
+            <input
+              className={campoClasse}
+              value={novoPrecoObservacao}
+              onChange={(e) => setNovoPrecoObservacao(e.target.value)}
+              placeholder="Opcional"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleAdicionarPreco}
+            disabled={salvandoPreco}
+            className={botaoPrimarioClasse}
+          >
+            {salvandoPreco ? 'Salvando...' : 'Adicionar'}
+          </button>
+        </div>
+      </section>
+
+      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm">
+        <h2 className="mb-3 font-medium text-gray-900">Anexos</h2>
+
+        {anexos.length === 0 ? (
+          <p className="mb-3 text-sm text-gray-500">Nenhum arquivo anexado.</p>
+        ) : (
+          <ul className="mb-3 flex flex-col gap-2">
+            {anexos.map((a) => (
+              <li
+                key={a.id}
+                className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 p-3 text-sm"
+              >
+                <button
+                  type="button"
+                  onClick={() => handleAbrirAnexo(a)}
+                  className="truncate text-left font-medium text-marrom underline"
+                >
+                  {a.nome_arquivo}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExcluirAnexo(a)}
+                  className="shrink-0 text-xs text-gray-400 hover:text-red-600"
+                >
+                  Excluir
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <input
+          type="file"
+          onChange={(e) => handleEnviarAnexo(e.target.files?.[0])}
+          disabled={enviandoAnexo}
+          className="text-sm"
+        />
+        {enviandoAnexo && <p className="mt-1 text-xs text-gray-500">Enviando...</p>}
+        <p className="mt-2 text-xs text-gray-400">
+          Fotos, propostas em PDF ou qualquer arquivo relacionado a este cliente.
+        </p>
       </section>
 
       <section className="mb-4 rounded-xl bg-white p-4 shadow-sm">

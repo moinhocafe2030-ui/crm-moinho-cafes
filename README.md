@@ -21,6 +21,30 @@ CRM interno para controlar potenciais clientes (cafeterias, restaurantes, empór
 - [x] Lembrete diário por email (09:00, Edge Function + pg_cron)
 - [x] Logo da empresa editável
 - [x] Publicação na Vercel (deploy automático a cada atualização enviada ao GitHub)
+- [x] Histórico de pedidos, alerta de recompra, conversão de amostra, preços negociados, anexos,
+      follow-up automático, previsão ponderada e modo offline de visualização (ver seção abaixo)
+
+## Melhorias inspiradas em CRMs de mercado
+
+- **Histórico de pedidos**: na ficha do cliente, registre cada pedido (data, produto, valor). Isso
+  alimenta o alerta de recompra no Painel.
+- **Clientes sem comprar (alerta de recompra)**: no Painel, mostra clientes já fechados que não têm
+  pedido registrado há mais de X dias (você escolhe o número de dias). Só funciona para clientes com
+  pelo menos um pedido registrado.
+- **Conversão de amostra em venda**: no Painel, mostra qual % dos clientes que receberam amostra
+  viraram cliente fechado.
+- **Preços negociados**: na ficha do cliente, registre o preço combinado por produto.
+- **Anexos**: na ficha do cliente, envie fotos, propostas em PDF ou qualquer arquivo relacionado.
+  Ficam guardados de forma privada (só vendedores logados acessam).
+- **Follow-up automático de amostra**: ao registrar uma amostra, o CRM já cria (opcionalmente) um
+  próximo passo "Cobrar feedback da amostra enviada" para 7 dias depois — inclusive na sua Agenda do
+  Google, se estiver conectada.
+- **Previsão de receita ponderada**: em **Funil > Etapas do funil**, defina a "chance de fechar" (%)
+  de cada etapa. O Painel passa a mostrar, além do valor potencial bruto, uma previsão que já leva
+  essa chance em conta.
+- **Modo offline (visualização)**: o app funciona como aplicativo instalado e mostra um aviso amarelo
+  quando o celular/computador está sem internet. Os últimos dados carregados continuam visíveis, mas
+  **não é possível criar ou editar nada offline** — é preciso estar conectado para salvar.
 
 ## Como rodar localmente
 

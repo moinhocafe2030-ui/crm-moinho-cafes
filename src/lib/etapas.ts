@@ -29,7 +29,7 @@ export async function criarEtapa(nome: string, proximaOrdem: number): Promise<Et
 
 export async function atualizarEtapa(
   id: string,
-  dados: Partial<Pick<EtapaFunil, 'nome' | 'cor' | 'encerra_ganho' | 'encerra_perda'>>,
+  dados: Partial<Pick<EtapaFunil, 'nome' | 'cor' | 'encerra_ganho' | 'encerra_perda' | 'probabilidade'>>,
 ): Promise<void> {
   const { error } = await supabase.from('etapas_funil').update(dados).eq('id', id)
   if (error) throw error

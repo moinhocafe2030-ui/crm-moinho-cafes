@@ -17,3 +17,11 @@ export async function listarClientesParaPainel(): Promise<ClientePainel[]> {
   if (error) throw error
   return data as unknown as ClientePainel[]
 }
+
+// Clientes que já receberam pelo menos uma amostra, para calcular a taxa de conversão
+// de amostra em venda no Painel.
+export async function listarClienteIdsComAmostra(): Promise<Set<string>> {
+  const { data, error } = await supabase.from('amostras').select('cliente_id')
+  if (error) throw error
+  return new Set((data as { cliente_id: string }[]).map((a) => a.cliente_id))
+}

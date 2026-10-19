@@ -10,6 +10,31 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
+      workbox: {
+        // Permite abrir o CRM e ver os últimos dados carregados mesmo sem internet
+        // (ex: durante uma visita a um cliente). Não funciona para CRIAR ou EDITAR
+        // dados offline — isso exige conexão, e o app mostra um aviso quando está offline.
+        runtimeCaching: [
+          {
+            urlPattern: /\/rest\/v1\//,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'supabase-dados',
+              networkTimeoutSeconds: 5,
+              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 7 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /\/storage\/v1\/object\/public\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'supabase-arquivos-publicos',
+              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
+        ],
+      },
       manifest: {
         name: 'CRM Moinho Cafés',
         short_name: 'Moinho CRM',

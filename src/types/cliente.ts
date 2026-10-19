@@ -124,8 +124,13 @@ export interface Pedido {
   data_pedido: string
   produto: string | null
   valor: number | null
+  quantidade_kg: number | null
   observacao: string | null
   criado_em: string
+}
+
+export interface PedidoComCliente extends Pedido {
+  clientes: { nome_estabelecimento: string } | null
 }
 
 export interface PrecoNegociado {

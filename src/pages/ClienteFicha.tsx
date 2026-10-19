@@ -54,6 +54,7 @@ export function ClienteFicha() {
   const [novoPedidoData, setNovoPedidoData] = useState(dataHojeISO())
   const [novoPedidoProduto, setNovoPedidoProduto] = useState('')
   const [novoPedidoValor, setNovoPedidoValor] = useState('')
+  const [novoPedidoVolume, setNovoPedidoVolume] = useState('')
   const [novoPedidoObservacao, setNovoPedidoObservacao] = useState('')
   const [salvandoPedido, setSalvandoPedido] = useState(false)
 
@@ -158,10 +159,12 @@ export function ClienteFicha() {
         novoPedidoData,
         novoPedidoProduto || null,
         novoPedidoValor.trim() === '' ? null : Number(novoPedidoValor),
+        novoPedidoVolume.trim() === '' ? null : Number(novoPedidoVolume),
         novoPedidoObservacao || null,
       )
       setNovoPedidoProduto('')
       setNovoPedidoValor('')
+      setNovoPedidoVolume('')
       setNovoPedidoObservacao('')
       await carregar()
     } catch (e) {
@@ -511,6 +514,7 @@ export function ClienteFicha() {
                 <p className="font-medium text-gray-900">
                   {formatarDataSimples(p.data_pedido)}
                   {p.valor != null && ` · R$ ${p.valor}`}
+                  {p.quantidade_kg != null && ` · ${p.quantidade_kg} kg`}
                   {p.produto && ` · ${p.produto}`}
                 </p>
                 {p.observacao && <p className="text-gray-600">{p.observacao}</p>}
@@ -546,6 +550,16 @@ export function ClienteFicha() {
               className={campoClasse}
               value={novoPedidoValor}
               onChange={(e) => setNovoPedidoValor(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelClasse}>Volume (kg)</label>
+            <input
+              type="number"
+              step="0.01"
+              className={campoClasse}
+              value={novoPedidoVolume}
+              onChange={(e) => setNovoPedidoVolume(e.target.value)}
             />
           </div>
           <div className="flex-1">

@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import type { Pedido } from '../types/cliente'
+import type { Pedido, PedidoComCliente } from '../types/cliente'
 
 export async function listarPedidos(clienteId: string): Promise<Pedido[]> {
   const { data, error } = await supabase
@@ -16,12 +16,38 @@ export async function criarPedido(
   dataPedido: string,
   produto: string | null,
   valor: number | null,
+  quantidadeKg: number | null,
   observacao: string | null,
 ): Promise<void> {
   const { error } = await supabase
     .from('pedidos')
-    .insert({ cliente_id: clienteId, data_pedido: dataPedido, produto, valor, observacao })
+    .insert({
+      cliente_id: clienteId,
+      data_pedido: dataPedido,
+      produto,
+      valor,
+      quantidade_kg: quantidadeKg,
+      observacao,
+    })
   if (error) throw error
+}
+
+// Todos os pedidos num período (opcional), com o nome do cliente — usado na tela de Vendas.
+export async function listarPedidosComCliente(
+  dataInicio?: string,
+  dataFim?: string,
+): Promise<PedidoComCliente[]> {
+  let query = supabase
+    .from('pedidos')
+    .select('*, clientes ( nome_estabelecimento )')
+    .order('data_pedido', { ascending: false })
+
+  if (dataInicio) query = query.gte('data_pedido', dataInicio)
+  if (dataFim) query = query.lte('data_pedido', dataFim)
+
+  const { data, error } = await query
+  if (error) throw error
+  return data as unknown as PedidoComCliente[]
 }
 
 export async function excluirPedido(id: string): Promise<void> {

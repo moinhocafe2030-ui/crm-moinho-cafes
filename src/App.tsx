@@ -12,6 +12,7 @@ import { ClienteFicha } from './pages/ClienteFicha'
 import { Funil } from './pages/Funil'
 import { EtapasFunil } from './pages/EtapasFunil'
 import { Painel } from './pages/Painel'
+import { Vendas } from './pages/Vendas'
 import { Configuracoes } from './pages/Configuracoes'
 import { ModelosEmail } from './pages/ModelosEmail'
 
@@ -99,6 +100,16 @@ export default function App() {
               <RotaProtegida>
                 <Layout>
                   <Painel />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/vendas"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Vendas />
                 </Layout>
               </RotaProtegida>
             }

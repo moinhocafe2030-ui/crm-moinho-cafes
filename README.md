@@ -26,8 +26,11 @@ CRM interno para controlar potenciais clientes (cafeterias, restaurantes, empór
 
 ## Melhorias inspiradas em CRMs de mercado
 
-- **Histórico de pedidos**: na ficha do cliente, registre cada pedido (data, produto, valor). Isso
-  alimenta o alerta de recompra no Painel.
+- **Histórico de pedidos**: na ficha do cliente, registre cada pedido (data, produto, valor, volume
+  em kg). Isso alimenta o alerta de recompra no Painel e a tela de **Vendas**.
+- **Tela de Vendas**: dashboard com filtro por período (data inicial/final), mostrando total vendido
+  em R$, total em kg, nº de pedidos, ticket médio, faturamento por mês (últimos 12 meses), top
+  clientes e vendas por produto no período escolhido.
 - **Clientes sem comprar (alerta de recompra)**: no Painel, mostra clientes já fechados que não têm
   pedido registrado há mais de X dias (você escolhe o número de dias). Só funciona para clientes com
   pelo menos um pedido registrado.

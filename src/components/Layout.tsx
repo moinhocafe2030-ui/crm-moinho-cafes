@@ -22,6 +22,7 @@ const links = [
   { to: '/funil', label: 'Funil' },
   { to: '/clientes', label: 'Clientes' },
   { to: '/painel', label: 'Painel' },
+  { to: '/vendas', label: 'Vendas' },
 ]
 
 export function Layout({ children }: { children: ReactNode }) {

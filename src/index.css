@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-marrom: #3f2a1d;
+  --color-marrom-claro: #6b4a33;
+  --color-creme: #faf6f1;
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-creme);
+  color: #1f1a17;
+}

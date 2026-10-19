@@ -1,0 +1,126 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './lib/AuthContext'
+import { RotaProtegida } from './components/RotaProtegida'
+import { Layout } from './components/Layout'
+import { Login } from './pages/Login'
+import { Hoje } from './pages/Hoje'
+import { Clientes } from './pages/Clientes'
+import { ClienteForm } from './pages/ClienteForm'
+import { ClienteFicha } from './pages/ClienteFicha'
+import { Funil } from './pages/Funil'
+import { EtapasFunil } from './pages/EtapasFunil'
+import { Painel } from './pages/Painel'
+import { Configuracoes } from './pages/Configuracoes'
+import { ModelosEmail } from './pages/ModelosEmail'
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Hoje />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/funil"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Funil />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/funil/etapas"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <EtapasFunil />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/clientes"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Clientes />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/clientes/novo"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <ClienteForm />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/clientes/:id"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <ClienteFicha />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/clientes/:id/editar"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <ClienteForm />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/painel"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Painel />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/configuracoes"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Configuracoes />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/configuracoes/modelos-email"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <ModelosEmail />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  )
+}

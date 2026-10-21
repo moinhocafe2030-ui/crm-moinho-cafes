@@ -13,6 +13,10 @@ import { Funil } from './pages/Funil'
 import { EtapasFunil } from './pages/EtapasFunil'
 import { Painel } from './pages/Painel'
 import { Vendas } from './pages/Vendas'
+import { Portfolio } from './pages/Portfolio'
+import { FornecedorForm } from './pages/FornecedorForm'
+import { FornecedorFicha } from './pages/FornecedorFicha'
+import { LoteFicha } from './pages/LoteFicha'
 import { Configuracoes } from './pages/Configuracoes'
 import { ModelosEmail } from './pages/ModelosEmail'
 
@@ -111,6 +115,54 @@ export default function App() {
                 <Layout>
                   <Vendas />
                 </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/fornecedores"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <Portfolio />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/fornecedores/novo"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <FornecedorForm />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/fornecedores/:id"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <FornecedorFicha />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/fornecedores/:id/editar"
+            element={
+              <RotaProtegida>
+                <Layout>
+                  <FornecedorForm />
+                </Layout>
+              </RotaProtegida>
+            }
+          />
+          <Route
+            path="/fornecedores/lotes/:id/imprimir"
+            element={
+              <RotaProtegida>
+                <LoteFicha />
               </RotaProtegida>
             }
           />

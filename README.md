@@ -23,6 +23,8 @@ CRM interno para controlar potenciais clientes (cafeterias, restaurantes, empór
 - [x] Publicação na Vercel (deploy automático a cada atualização enviada ao GitHub)
 - [x] Histórico de pedidos, alerta de recompra, conversão de amostra, preços negociados, anexos,
       follow-up automático, previsão ponderada e modo offline de visualização (ver seção abaixo)
+- [x] Portfólio de fornecedores de café verde (produtores/cooperativas + lotes, busca, exportar/imprimir)
+- [x] Backup mensal por email (CSV de clientes e fornecedores, todo dia 15)
 
 ## Melhorias inspiradas em CRMs de mercado
 
@@ -31,6 +33,15 @@ CRM interno para controlar potenciais clientes (cafeterias, restaurantes, empór
 - **Tela de Vendas**: dashboard com filtro por período (data inicial/final), mostrando total vendido
   em R$, total em kg, nº de pedidos, ticket médio, faturamento por mês (últimos 12 meses), top
   clientes e vendas por produto no período escolhido.
+- **Fornecedores (portfólio de cafés verdes)**: cadastro de produtores/cooperativas (nome, fazenda,
+  região, endereço, email, celular — todos exceto o nome são opcionais) e, dentro de cada fornecedor,
+  vários **lotes de café** (variedade, processamento, safra, altitude, certificação, nota SCA, volume
+  disponível em kg, preço por saca de 60kg, observações e anexos como o laudo SCA em PDF). A tela
+  **Fornecedores** no menu é uma busca que cruza todos os lotes cadastrados, com filtro por variedade,
+  processamento, região, altitude mínima, nota mínima e volume mínimo — pensada pra responder rápido
+  quando um comprador pergunta "tem café X com Y pontos e Z kg disponíveis?". De lá dá pra exportar a
+  lista em CSV/Excel, imprimir a lista inteira, ou gerar uma ficha individual de um lote (PDF, pelo
+  botão imprimir do navegador) pra mandar pro comprador.
 - **Clientes sem comprar (alerta de recompra)**: no Painel, mostra clientes já fechados que não têm
   pedido registrado há mais de X dias (você escolhe o número de dias). Só funciona para clientes com
   pelo menos um pedido registrado.
@@ -135,6 +146,21 @@ automático com os retornos atrasados e os de hoje **dos clientes que ele é res
   **pg_net**, e a service role key guardada com segurança no **Vault** do Supabase (nunca fica
   exposta no código ou no histórico do SQL Editor)
 - Para conferir se está agendado: `select * from cron.job;` no SQL Editor
+
+### Backup mensal por email
+Todo dia **15 de cada mês, às 08:00** (horário de Brasília), chega um email com três arquivos CSV
+em anexo — `clientes.csv`, `fornecedores.csv` e `lotes_cafe.csv` — com todos os registros cadastrados
+até aquele momento. É um backup bruto (não um relatório bonito de leitura) pra garantir uma cópia de
+segurança dos dados caso algo dê errado no sistema; os CSVs abrem no Excel normalmente.
+
+- Edge Function: `backup-mensal` (mesma lógica de autenticação do lembrete diário — chamada pelo
+  pg_cron com a service role key, **Verify JWT ligado**, padrão)
+- Agendamento: `supabase/migrations/0010_backup_mensal_cron.sql` — reaproveita a mesma service role
+  key já guardada no Vault pela migração 0004
+- Enviado para `moinhocafe2030@gmail.com` por padrão (dá pra trocar criando o secret
+  `EMAIL_BACKUP_MENSAL` em **Supabase > Edge Functions > Secrets**)
+- Usa a conta Google já conectada em Configurações para enviar — se ninguém estiver conectado, o
+  backup simplesmente não é enviado naquele mês (confira os logs da função no Supabase se desconfiar)
 - Para testar manualmente sem esperar o horário, chame a função com uma ferramenta como `curl` ou
   Postman usando seu token de login (não funciona direto pelo navegador por causa do CORS)
 

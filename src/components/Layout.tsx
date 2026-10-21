@@ -23,6 +23,7 @@ const links = [
   { to: '/clientes', label: 'Clientes' },
   { to: '/painel', label: 'Painel' },
   { to: '/vendas', label: 'Vendas' },
+  { to: '/fornecedores', label: 'Fornecedores' },
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
